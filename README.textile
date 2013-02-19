@@ -1,5 +1,7 @@
 h1(#nginx_push_stream_module). Nginx Push Stream Module
 
+(hustdelta modified version)
+
 A pure stream http push technology for your Nginx setup.
 
 "Comet":comet_ref made easy and *really scalable*.
