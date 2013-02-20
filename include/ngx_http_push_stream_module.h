@@ -95,6 +95,11 @@ typedef struct {
     ngx_str_t                       padding_by_user_agent;
     ngx_http_push_stream_padding_t *paddings;
     ngx_str_t                       allowed_origins;
+
+    /* hustdelta added: user online/offline subrequest path */
+    ngx_str_t                       online_notify;
+    ngx_str_t                       offline_notify;
+
 } ngx_http_push_stream_loc_conf_t;
 
 // shared memory segment name

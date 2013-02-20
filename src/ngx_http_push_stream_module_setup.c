@@ -230,6 +230,21 @@ static ngx_command_t    ngx_http_push_stream_commands[] = {
         NGX_HTTP_LOC_CONF_OFFSET,
         offsetof(ngx_http_push_stream_loc_conf_t, allowed_origins),
         NULL },
+
+    /* hustdelta added: user online/offline subrequest path */
+    { ngx_string("push_stream_online_notify"),
+        NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+        ngx_conf_set_str_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_push_stream_loc_conf_t, online_notify),
+        NULL },
+    { ngx_string("push_stream_offline_notify"),
+        NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+        ngx_conf_set_str_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(ngx_http_push_stream_loc_conf_t, offline_notify),
+        NULL },
+
     ngx_null_command
 };
 
@@ -544,6 +559,10 @@ ngx_http_push_stream_create_loc_conf(ngx_conf_t *cf)
     lcf->paddings = NULL;
     lcf->allowed_origins.data = NULL;
 
+    /* hustdelta added: user online/offline subrequest path */
+    lcf->online_notify.data = NULL;
+    lcf->offline_notify.data = NULL;
+
     return lcf;
 }
 
@@ -584,6 +603,20 @@ ngx_http_push_stream_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     if (conf->location_type == NGX_CONF_UNSET_UINT) {
         return NGX_CONF_OK;
     }
+
+#if 0  /* debug only */
+    /* hustdelta added: for debug the loading of new attr */
+    if (conf->online_notify.len == 0) {
+	ngx_str_set(&(conf->online_notify), "undefined");
+    }
+    if (conf->offline_notify.len == 0) {
+	ngx_str_set(&(conf->offline_notify), "undefined");
+    }
+    ngx_conf_log_error(NGX_LOG_ERR, cf, 0, "push_stream_online_notify = %s", 
+	    conf->online_notify.data);
+    ngx_conf_log_error(NGX_LOG_ERR, cf, 0, "push_stream_offline_notify = %s",
+	    conf->offline_notify.data);
+#endif
 
     // changing properties for event source support
     if (conf->eventsource_support) {
